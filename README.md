@@ -1,3 +1,28 @@
+## Angularプロジェクト作成
+```
+npm install -g @angular/cli
+// Angular CLIをグローバルインストール（初回のみ必要）
+
+ng new <プロジェクト名> --standalone
+// --standaloneフラグを付けることで、従来のAppModuleを使わずに、コンポーネント単体で動かすモダン構成になる
+// この構成はAngular v17以降の推奨構成
+// スタイルシートはCSS、Server-Side RenderingはNoを選択
+
+cd <プロジェクト名>
+ng serve
+// angularアプリの起動
+```
+
+## ホーム画面の作成
+下記コマンドでファイルを生成
+```
+ng generate component pages/home --standalone
+// 画面を作成する際は"pages/"配下に配置
+// 複数画面で再利用するパーツは"components/"配下に配置
+```
+
+
+
 # MyAngularApp
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.7.
