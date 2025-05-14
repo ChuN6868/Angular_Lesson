@@ -21,6 +21,16 @@ ng generate component pages/home --standalone
 // 複数画面で再利用するパーツは"components/"配下に配置
 ```
 
+生成されたhome.component.htmlの中身を下記のように修正
+```
+<h1>ホーム画面</h1>
+<p>これはホーム画面です。</p>
+```
+
+src/app/app.component.tsの中身を下記のように修正
+```
+
+```
 
 
 # MyAngularApp
