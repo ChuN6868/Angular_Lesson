@@ -29,7 +29,57 @@ ng generate component pages/home --standalone
 
 src/app/app.component.tsの中身を下記のように修正
 ```
+import { Component } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+import { HomeComponent } from './pages/home/home.component';
 
+@Component({
+  selector: 'app-root',
+  imports: [RouterOutlet,HomeComponent],
+  templateUrl: './app.component.html',
+  styleUrl: './app.component.css'
+})
+export class AppComponent {
+  title = 'address-app';
+}
+```
+
+src/app/app.component.htmlの中身を下記のように修正
+```
+<main class="main">
+  <app-home></app-home>
+</main>
+<router-outlet />
+```
+
+以上で作成したHome画面が表示されるようになる。
+```
+ng serve
+```
+
+## 住所検索画面を作成
+下記コマンドでファイルを生成
+```
+ng generate component pages/zipcode-search --standalone
+```
+
+src/app/pages/zipcode-search/zipcode-search.component.htmlの中身を下記のように修正
+```
+<h2>住所検索画面（準備中）</h2>
+<p>ここに検索機能を作っていきます。</p>
+```
+
+## ルーティング設定（画面遷移）
+src/app/app.routes.tsを下記のように修正
+```
+import { Routes } from '@angular/router';
+import { HomeComponent } from './pages/home/home.component';
+import { ZipcodeSearchComponent } from './pages/zipcode-search/zipcode-search.component';
+
+export const routes: Routes = [
+    { path: '', component: HomeComponent },
+    { path: 'search', component: ZipcodeSearchComponent }
+  ];
 ```
 
 
