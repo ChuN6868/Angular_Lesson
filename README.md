@@ -1,3 +1,4 @@
+# 環境構築
 ## Angularプロジェクト作成
 ```
 npm install -g @angular/cli
@@ -57,7 +58,94 @@ src/app/app.component.htmlの中身を下記のように修正
 ng serve
 ```
 
-## 住所検索画面を作成
+# 追加機能
+## HttpClient関連（API叩くとき）
+①src/app.config.tsを下記のように修正
+```
+import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import { provideRouter } from '@angular/router';
+
+import { routes } from './app.routes';
+import { provideHttpClient } from '@angular/common/http';
+
+export const appConfig: ApplicationConfig = {
+  providers: [
+    provideZoneChangeDetection({ eventCoalescing: true }),
+    provideRouter(routes), // ルーターの定義
+    provideHttpClient() // APIを使用する際に必要
+  ]
+};
+```
+
+②src/app/pages/home/home.component.tsに下記のコードを追記
+```
+import { Component, OnInit } from '@angular/core'; // 追加箇所
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http'; // 追加箇所
+
+@Component({
+  selector: 'app-home',
+  imports: [CommonModule, FormsModule],
+  templateUrl: './home.component.html',
+  styleUrl: './home.component.css'
+})
+
+// 追記箇所
+export class HomeComponent {
+  expresswords: string = '';
+  error: string = '';
+
+  constructor(private http: HttpClient) {}
+
+  // ngOnInitは画面リロード時に実行されるもの
+  ngOnInit(): void {
+    this.initTest();
+  }
+
+  // ngOnInitで実行する関数(APIあり)
+  initTest() {
+    const url = `http://localhost:5000/api/init`;
+    this.http.get<any>(url).subscribe({
+      next: (res) => {
+        console.log(res.message);
+        this.expresswords = res.message;
+      },
+      error: () => {
+        this.error = 'API通信に失敗';
+      }
+    })
+  }
+
+  // ボタンを押した際に実行する関数（APIあり）
+  test() {
+    const url = `http://localhost:5000/api/hello`;
+    this.http.get<any>(url).subscribe({
+      next: (res) => {
+        console.log(res);
+        console.log(res.message);
+        this.expresswords = res.message;
+      },
+      error: () => {
+        this.error = 'API通信に失敗';
+      }
+    })
+  }
+}
+```
+
+③src/app/pages/home/home.component.htmlを下記のように修正
+```
+<h1>ホーム画面</h1>
+<p>ここでバックエンドとの通信を試みる</p>
+<button (click)="test()">バックエンドテスト</button>
+<div>
+    <p>{{ expresswords }}</p>
+</div>
+```
+
+## ページ（Component）を増やしてルーティング設定
+### 住所検索画面を作成
 下記コマンドでファイルを生成
 ```
 ng generate component pages/zipcode-search --standalone
@@ -69,7 +157,7 @@ src/app/pages/zipcode-search/zipcode-search.component.htmlの中身を下記の�
 <p>ここに検索機能を作っていきます。</p>
 ```
 
-## ルーティング設定（画面遷移）
+### ルーティング設定（画面遷移）
 src/app/app.routes.tsを下記のように修正
 ```
 import { Routes } from '@angular/router';
@@ -80,6 +168,25 @@ export const routes: Routes = [
     { path: '', component: HomeComponent },
     { path: 'search', component: ZipcodeSearchComponent }
   ];
+```
+
+src/app/app.component.tsを下記のように修正
+```
+import { Component } from '@angular/core';
+import { RouterLink,RouterOutlet } from '@angular/router';
+//import { HomeComponent } from './pages/home/home.component';
+
+@Component({
+  selector: 'app-root',
+  imports: [RouterLink,RouterOutlet],
+  //imports: [RouterOutlet,HomeComponent],
+  templateUrl: './app.component.html',
+  styleUrl: './app.component.css'
+})
+
+export class AppComponent {
+  title = 'address-app';
+}
 ```
 
 
