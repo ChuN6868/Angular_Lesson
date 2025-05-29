@@ -189,6 +189,17 @@ export class AppComponent {
 }
 ```
 
+src/app/app.component.htmlを下記のように修正
+```
+<nav>
+  <a routerLink="/">Home</a> |
+  <a routerLink="/search">住所検索</a>
+</nav>
+<hr />
+<router-outlet></router-outlet>
+```
+これで<router-outlet></router-outlet>の箇所がルーティング設定したコンポネントにパス次第で切り替わるようになる。
+
 
 # MyAngularApp
 
